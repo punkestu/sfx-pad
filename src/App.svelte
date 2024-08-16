@@ -1,5 +1,4 @@
 <script>
-  let panes = new Array(16).fill(null);
   let audios = new Array(16).fill(null);
   let isSetup = false;
   let filesInput;
@@ -12,26 +11,16 @@
   function handleFiles(_files) {
     if (_files) {
       if (_files.length === 1 && selectedId) {
-        panes[selectedId] = _files[0].name;
-        audios[selectedId] = new Audio(URL.createObjectURL(_files[0]));
+        audios[selectedId] = _files[0];
         selectedId = null;
         _files = null;
         filesInput.value = "";
       } else if (_files.length > 0) {
         for (let i = 0; i < _files.length; i++) {
-          panes[i] = _files[i].name;
-          audios[i] = new Audio(URL.createObjectURL(_files[i]));
+          audios[i] = _files[i];
         }
       }
       filePopover.hidePopover();
-    }
-  }
-
-  function clear() {
-    for (let i = 0; i < 16; i++) {
-      if (audios[i]) {
-        audios[i].load();
-      }
     }
   }
 
@@ -40,8 +29,11 @@
       selectedId = id;
     } else {
       if (audios[id]) {
-        clear();
-        audios[id].play();
+        const audio = new Audio(URL.createObjectURL(audios[id]));
+        audio.play();
+        audio.onended = () => {
+          audio.src = "";
+        };
       }
     }
   }
@@ -100,8 +92,8 @@
         popovertarget={isSetup ? "file-popover" : ""}
         on:click={() => paneClicked(i)}
       >
-        {i + 1 > 9 ? ["q", "w", "e", "r", "t", "y", "u"][i - 9] : i + 1} <br>
-        {audio ? panes[i] : ""}</button
+        {i + 1 > 9 ? ["q", "w", "e", "r", "t", "y", "u"][i - 9] : i + 1} <br />
+        {audio ? audios[i].name : ""}</button
       >
     {/each}
   </div>
