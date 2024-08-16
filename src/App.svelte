@@ -92,7 +92,11 @@
         popovertarget={isSetup ? "file-popover" : ""}
         on:click={() => paneClicked(i)}
       >
-        {i + 1 > 9 ? ["q", "w", "e", "r", "t", "y", "u"][i - 9] : i + 1} <br />
+        <span class="underline"
+          >{i + 1 > 9
+            ? ["q", "w", "e", "r", "t", "y", "u"][i - 9]
+            : i + 1}</span
+        ><br />
         {audio ? audios[i].name : ""}</button
       >
     {/each}
